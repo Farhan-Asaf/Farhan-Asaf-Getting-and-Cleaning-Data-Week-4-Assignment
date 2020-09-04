@@ -1,0 +1,40 @@
+# dplyr is used to aggregate variables to create the tidy data.
+
+library(dplyr)
+
+
+
+# Download the dataset
+
+Zipurl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
+download.file(Zipurl, destfile =  "E:/Assignment/dataset.zip")
+
+
+
+# Unzip the dataset 
+
+unzip(zipfile =  "E:/Assignment/dataset.zip", exdir =  "E:/Assignment")
+
+
+
+# Read the dataset 
+
+feature <- read.table("E:/Assignment/UCI HAR Dataset/features.txt", header = FALSE)
+activity <- read.table("E:/Assignment/UCI HAR Dataset/test/activity_labels.txt", header = FALSE)
+
+X_test <- read.table("E:/Assignment/UCI HAR Dataset/test/X_test.txt", header = FALSE)
+Y_test <- read.table("E:/Assignment/UCI HAR Dataset/test/y_test.txt", header = FALSE)
+subject_test <- read.table("E:/Assignment/UCI HAR Dataset/test/subject_test.txt", header = FALSE)
+
+X_train <- read.table("E:/Assignment/UCI HAR Dataset/train/X_train.txt", header = FALSE)
+Y_train <- read.table("E:/Assignment/UCI HAR Dataset/train/y_train.txt", header = FALSE)
+subject_train <- read.table("E:/Assignment/UCI HAR Dataset/train/subject_train.txt", header = FALSE)
+
+
+
+#  Merges the training and the test sets to create one data set.
+
+subject <- rbind(subject_test, subject_train)
+X <- rbind(X_test, X_train)
+features <- rbind(Y_test, Y_train)
+
