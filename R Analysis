@@ -17,10 +17,11 @@ unzip(zipfile =  "E:/Assignment/dataset.zip", exdir =  "E:/Assignment")
 
 
 
+
 # Read the dataset 
 
-feature <- read.table("E:/Assignment/UCI HAR Dataset/features.txt", header = FALSE)
-activity <- read.table("E:/Assignment/UCI HAR Dataset/activity_labels.txt", header = FALSE)
+features <- read.table("E:/Assignment/UCI HAR Dataset/features.txt", header = FALSE)
+activity_level <- read.table("E:/Assignment/UCI HAR Dataset/activity_labels.txt", header = FALSE)
 
 X_test <- read.table("E:/Assignment/UCI HAR Dataset/test/X_test.txt", header = FALSE)
 Y_test <- read.table("E:/Assignment/UCI HAR Dataset/test/y_test.txt", header = FALSE)
@@ -32,77 +33,15 @@ Subject_train <- read.table("E:/Assignment/UCI HAR Dataset/train/subject_train.t
 
 
 
-#  Merges the training and the test sets to create one data set.
 
-test <- cbind(X_test, Y_test, Subject_test)
-train <- cbind(X_train, Y_train, Subject_train) 
-final <- rbind(test, train) 
-
+X <- rbind(X_test , X_train)
+Y <- rbind(Y_test, Y_train)
+Subject <- rbind(Subject_test, Subject_train)
 
 
-# Extracts only the measurements on the mean and standard deviation for each measurement.
-
-    # Assign variable names 
-    
- #colnames(X_test) <- features[,2]
- #colnames(X_train) <- features[,2]
- #colnames(activity) <- c("activityID", "activityType")
-   
- colnames(final) <-  c("subject", "features[, 2]", "activity")
-   
-   
-   
-   
-  mean_and_std <- grepl("subject|activity|mean|std", colnames(final))
-  
- #mean_and_std <- (grepl("activityID", colNames) |
-                         #grepl("subjectID", colNames) |
-                         # THIS WAS COPIED FROM https://github.com/wdluft/getting-and-cleaning-data-week-4-project
-# SHOULD NOT BE ACCEPTED AS A NEW SUBMISSION
-                         #grepl("mean..", colNames) |
-                         #grepl("std...", colNames)
-                         
-                         
-                         
-        )
-        
-        
-        
-        Uses descriptive activity names to name the activities in the data set
-        
-        
-        
-      #  humanActivity <- humanActivity[, columnsToKeep]
-        
-        
-        setforMeanandStd <- final[ , mean_and_std == TRUE]
-        
-        
-        
-        
-        setWithActivityNames <- merge(setforMeanandStd, activityLabels,
-                                      by = "activityID",
-                                      all.x = TRUE)
-        
-        
-        
-        humanActivity$activity <- factor(humanActivity$activity, 
-  levels = activities[, 1], labels = activities[, 2])
+colnames(X) <- t(features[2])
+colnames(Y) <- "Activity"
+colnames(Subject) <- "Subject"
 
 
-
-
-
-
-
-idySet <- aggregate(. ~subjectID + activityID, setWithActivityNames, mean)
-        tidySet <- tidySet[order(tidySet$subjectID, tidySet$activityID), ]
-        
-        # 5.2 Writing second tidy data set into a txt file
-        write.table(tidySet, "tidySet.txt", row.names = FALSE)
-        
- 
-
-
-
-
+merge_data <- cbind (X, Y, Subject) 
