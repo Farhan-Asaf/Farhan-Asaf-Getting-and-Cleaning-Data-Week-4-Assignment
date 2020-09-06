@@ -4,10 +4,12 @@ library(dplyr)
 
 
 
+
 # Download the dataset
 
 Zipurl <- "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip"
 download.file(Zipurl, destfile =  "E:/Assignment/dataset.zip")
+
 
 
 
@@ -34,14 +36,67 @@ Subject_train <- read.table("E:/Assignment/UCI HAR Dataset/train/subject_train.t
 
 
 
+# Merges the training and the test sets to create one data set.
+
+     #  Combining same type of dataset together  
 X <- rbind(X_test , X_train)
 Y <- rbind(Y_test, Y_train)
 Subject <- rbind(Subject_test, Subject_train)
 
-
+     # Assigning Name 
 colnames(X) <- t(features[2])
-colnames(Y) <- "Activity"
-colnames(Subject) <- "Subject"
+colnames(Y) <- "activityID"
+colnames(Subject) <- "subjectID"
+colnames(activity_level) <- c("activityID", "activityType")
 
-
+     # Merging  the test and train dataset
 merge_data <- cbind (X, Y, Subject) 
+
+
+
+
+# Extracts only the measurements on the mean and standard deviation for each measurement.
+      
+     # Assigning name to the merge dataset
+merge_name <- colnames(merge_data)
+
+
+     # Defining dataset for mean and standard deviation for merge dataset 
+
+mean_and_std <- (
+                  grepl("activityID", merge_name) |
+                  grepl("subjectID", merge_name) |
+                  grepl("mean", merge_name) |
+                  grepl("std", merge_name)
+        )
+
+
+     # Subseting mean and standard deviation
+
+mean_std_subset <- merge_data[ , mean_and_std == TRUE]
+
+
+
+
+# Uses descriptive activity names to name the activities in the data set.
+
+Descriptive_Names <- merge(mean_std_subset, activity_level , by = "activityID", all.x = TRUE)
+        
+
+
+
+# Appropriately labels the data set with descriptive variable names.
+
+names(Descriptive_Names)
+
+
+
+
+# From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+      # Making tidy dataset 
+tidySet <- aggregate(. ~subjectID + activityID, Descriptive_Names, mean)
+tidySet <- tidySet[order(tidySet$subjectID, tidySet$activityID), ]
+        
+      #  Converting tidy dataset into a txt file
+write.table(tidySet, "E:/Assignment/UCI HAR Dataset/tidySet.txt", row.names = FALSE)
