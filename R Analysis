@@ -87,7 +87,7 @@ Descriptive_Names <- merge(mean_std_subset, activity_level , by = "activityID", 
 
 # Appropriately labels the data set with descriptive variable names.
 
-names(Descriptive_Names)
+Descriptive_Names
 
 
 
@@ -95,8 +95,9 @@ names(Descriptive_Names)
 # From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.
 
       # Making tidy dataset 
-tidySet <- aggregate(. ~subjectID + activityID, Descriptive_Names, mean)
-tidySet <- tidySet[order(tidySet$subjectID, tidySet$activityID), ]
-        
+tidyData <- aggregate(. ~subjectID  + activityID, mean_std_subset, mean)
+tidyData <- tidyData[order(tidyData$subjectID,tidyData$activityID),]
+
+
       #  Converting tidy dataset into a txt file
-write.table(tidySet, "E:/Assignment/UCI HAR Dataset/tidySet.txt", row.names = FALSE)
+write.table(tidyData, file = "E:/Assignment/UCI HAR Dataset/tidy dataSet.txt", row.names = FALSE)
